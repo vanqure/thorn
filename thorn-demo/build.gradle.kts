@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-    api(project(":thorn-codecs:thorn-codec-jackson-msgpack"))
+    api(project(":thorn-codecs:thorn-codec-jackson"))
     api(project(":thorn-bridges:thorn-bridge-redis"))
 }

@@ -16,9 +16,8 @@ You can build dependency and append it to your local .m2 directory, by using: `.
 Thorn in action:
 
 ```java
-final CacheCodec cacheCodec = JacksonCacheCodecProducer.produceCodec();
 final ThornClient thornClient =
-        RedisThornProducer.produceThorn(RedisClient.create("redis://localhost:6379"), cacheCodec);
+        RedisThornProducer.produceThorn(RedisClient.create("redis://localhost:6379"), JacksonCacheCodecProducer.produceCodec());
 
 final UserRepository userRepository =
         UserRepository.newRepository(
