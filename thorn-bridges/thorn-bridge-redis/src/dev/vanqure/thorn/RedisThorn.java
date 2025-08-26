@@ -7,9 +7,9 @@ import io.lettuce.core.api.StatefulRedisConnection;
 
 final class RedisThorn implements ThornClient {
 
-    private final CacheCodec cacheCodec;
-    private final RedisClient redisClient;
-    private final StatefulRedisConnection<String, byte[]> connection;
+    final CacheCodec cacheCodec;
+    final RedisClient redisClient;
+    final StatefulRedisConnection<String, byte[]> connection;
 
     RedisThorn(final RedisClient redisClient, final CacheCodec cacheCodec) {
         this.redisClient = redisClient;

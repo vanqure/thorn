@@ -1,8 +1,15 @@
 package dev.vanqure.thorn.codec;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public interface CacheCodec {
 
-    <T> T deserialize(byte[] serializedData) throws CacheCodecException;
+    @Contract("null -> null")
+    <T> @Nullable T deserialize(@Nullable byte[] serializedData) throws CodecDeserializingException;
 
-    <T> byte[] serialize(T data) throws CacheCodecException;
+    <T> @NotNull byte[] serializeBytes(@NotNull T data) throws CodecSerializingException;
+
+    <T> @NotNull String serialize(@NotNull T data) throws CodecSerializingException;
 }
