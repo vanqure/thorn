@@ -8,27 +8,32 @@ import org.jetbrains.annotations.Nullable;
 
 public class RedisBaseRepository<K, V> {
 
+    private final Class<V> valueType;
     private final CacheCodec cacheCodec;
     private final RepositoryOptions options;
     private final StatefulRedisConnection<String, byte[]> connection;
 
-    protected RedisBaseRepository(final RepositoryOptions options, final ThornClient thornClient)
-            throws InvalidThornClientException, InvalidRepositoryOptionsException {
+    protected RedisBaseRepository(
+            final Class<V> valueType,
+            final RepositoryOptions options,
+            final ThornClient thornClient) throws InvalidThornClientException, InvalidRepositoryOptionsException {
         if (!(thornClient instanceof final RedisThorn redisThorn)) {
             throw new InvalidThornClientException("%s isn't a RedisThorn instance");
         }
-        this.options = options;
         if (options.prefix() == null || options.prefix().isBlank()) {
             throw new InvalidRepositoryOptionsException("Prefix must be non-null and non-blank");
         }
+        this.valueType = valueType;
+        this.options = options;
         this.cacheCodec = redisThorn.cacheCodec;
         this.connection = redisThorn.connection;
     }
 
     public static <K, V> RedisBaseRepository<K, V> create(
+            final Class<V> valueType,
             final RepositoryOptions options,
             final ThornClient thornClient) throws InvalidThornClientException, InvalidRepositoryOptionsException {
-        return new RedisBaseRepository<>(options, thornClient);
+        return new RedisBaseRepository<>(valueType, options, thornClient);
     }
 
     public void set(final @NotNull K key, final @NotNull V value) throws RepositoryOperationException {
@@ -54,10 +59,10 @@ public class RedisBaseRepository<K, V> {
             if (options.serializeKeys()) {
                 final String serializedKey = cacheCodec.serialize(key);
                 final byte[] serializedValue = connection.sync().get(options.prefix() + serializedKey);
-                return cacheCodec.deserialize(serializedValue);
+                return cacheCodec.deserialize(serializedValue, valueType);
             } else {
                 final byte[] serializedValue = connection.sync().get(options.prefix() + key);
-                return cacheCodec.deserialize(serializedValue);
+                return cacheCodec.deserialize(serializedValue, valueType);
             }
         } catch (final Exception exception) {
             throw new RepositoryOperationException("Couldn't get value by key %s".formatted(key), exception);

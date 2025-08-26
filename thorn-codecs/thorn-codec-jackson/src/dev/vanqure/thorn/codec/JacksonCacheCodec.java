@@ -1,10 +1,8 @@
 package dev.vanqure.thorn.codec;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Objects;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,13 +15,13 @@ final class JacksonCacheCodec implements CacheCodec {
     }
 
     @Override
-    @Contract("null -> null")
-    public <T> @Nullable T deserialize(final @Nullable byte[] serializedData) throws CodecDeserializingException {
+    public <T> @Nullable T deserialize(final @Nullable byte[] serializedData, final @NotNull Class<T> dataType)
+            throws CodecDeserializingException {
         if (serializedData == null) {
             return null;
         }
         try {
-            return mapper.readValue(serializedData, new TypeReference<>() {});
+            return mapper.readValue(serializedData, dataType);
         } catch (final Exception exception) {
             throw new CodecDeserializingException(
                     "Couldn't deserialize data %s using Jackson codec".formatted(Arrays.toString(serializedData)),

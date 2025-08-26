@@ -16,7 +16,7 @@ public final class Main {
 
     public static void main(final String[] args) {
         final CacheCodec cacheCodec =
-                JacksonCacheCodecProducer.produceCodec(MsgpackBasedObjectMapperProducer.produceMapper());
+                JacksonCacheCodecProducer.produceCodec();
         final ThornClient thornClient =
                 RedisThornProducer.produceThorn(RedisClient.create("redis://localhost:6379"), cacheCodec);
 

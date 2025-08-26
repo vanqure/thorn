@@ -11,7 +11,7 @@ public final class UserRepository extends RedisBaseRepository<String, User> {
 
     private UserRepository(final RepositoryOptions options, final ThornClient thornClient)
             throws InvalidThornClientException, InvalidRepositoryOptionsException {
-        super(options, thornClient);
+        super(User.class, options, thornClient);
     }
 
     public static UserRepository newRepository(final RepositoryOptions options, final ThornClient thornClient)
